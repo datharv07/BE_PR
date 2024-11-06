@@ -1,0 +1,85 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+
+entity abc_tb is
+-- No ports in the testbench entity
+end abc_tb;
+
+architecture Behavioral of abc_tb is
+    -- Component declaration for the Unit Under Test (UUT)
+    component abc
+        Port ( a : in  STD_LOGIC_VECTOR (3 downto 0);
+               b : in  STD_LOGIC_VECTOR (3 downto 0);
+               s : in  STD_LOGIC_VECTOR (2 downto 0);
+               c : out  STD_LOGIC_VECTOR (3 downto 0));
+    end component;
+
+    -- Signals to connect to the UUT
+    signal a : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
+    signal b : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
+    signal s : STD_LOGIC_VECTOR (2 downto 0) := (others => '0');
+    signal c : STD_LOGIC_VECTOR (3 downto 0);
+
+begin
+    -- Instantiate the Unit Under Test (UUT)
+    uut: abc Port map (
+        a => a,
+        b => b,
+        s => s,
+        c => c
+    );
+
+    -- Stimulus process
+    stim_proc: process
+    begin
+        -- Test case 1: Addition
+        a <= "0001";
+        b <= "0010";
+        s <= "000"; -- s = "000" should perform a + b
+        wait for 10 ns;
+        
+        -- Test case 2: Subtraction
+        a <= "0100";
+        b <= "0010";
+        s <= "001"; -- s = "001" should perform a - b
+        wait for 10 ns;
+        
+        -- Test case 3: AND operation
+        a <= "1100";
+        b <= "1010";
+        s <= "010"; -- s = "010" should perform a and b
+        wait for 10 ns;
+        
+        -- Test case 4: OR operation
+        a <= "1100";
+        b <= "1010";
+        s <= "011"; -- s = "011" should perform a or b
+        wait for 10 ns;
+        
+        -- Test case 5: NAND operation
+        a <= "1100";
+        b <= "1010";
+        s <= "100"; -- s = "100" should perform a nand b
+        wait for 10 ns;
+        
+        -- Test case 6: NOR operation
+        a <= "1100";
+        b <= "1010";
+        s <= "101"; -- s = "101" should perform a nor b
+        wait for 10 ns;
+        
+        -- Test case 7: NOT operation on a
+        a <= "1100";
+        s <= "110"; -- s = "110" should perform not a
+        wait for 10 ns;
+        
+        -- Test case 8: Pass-through a
+        a <= "1010";
+        s <= "111"; -- s = "111" should output a
+        wait for 10 ns;
+        
+        -- End of test cases
+        wait;
+    end process;
+end Behavioral;

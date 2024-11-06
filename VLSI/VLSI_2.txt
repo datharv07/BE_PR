@@ -1,0 +1,37 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity UniversalShiftRegister is
+    Port (
+        clk       : in  STD_LOGIC;
+        rst       : in  STD_LOGIC;
+        mode      : in  STD_LOGIC_VECTOR(1 downto 0); 
+        data_in   : in  STD_LOGIC_VECTOR(3 downto 0);
+        serial_in : in  STD_LOGIC;
+        q         : out STD_LOGIC_VECTOR(3 downto 0)
+    );
+end UniversalShiftRegister;
+
+architecture Behavioral of UniversalShiftRegister is
+    signal reg : STD_LOGIC_VECTOR(3 downto 0);
+begin
+
+    process(clk, rst)
+    begin
+        if rst = '1' then
+            reg <= "0000";
+        elsif rising_edge(clk) then
+            case mode is
+                when "00" => reg <= reg;
+                when "01" => reg <= reg(2 downto 0) & serial_in;
+                when "10" => reg <= serial_in & reg(3 downto 1);
+                when "11" => reg <= data_in;
+                when others => reg <= reg;
+            end case;
+        end if;
+    end process;
+
+    q <= reg;
+end Behavioral;

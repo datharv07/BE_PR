@@ -1,0 +1,59 @@
+Half Adder (HA):
+
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity HA is
+    Port ( a : in  STD_LOGIC;
+           b : in  STD_LOGIC;
+           sum : out  STD_LOGIC;
+           carry : out  STD_LOGIC);
+end HA;
+
+architecture Behavioral of HA is
+begin
+    sum <= a xor b;
+    carry <= a and b;
+end Behavioral; 
+
+
+
+
+
+Full Adder(FA):
+
+
+
+
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity fa is
+    Port ( a : in  STD_LOGIC;
+           b : in  STD_LOGIC;
+           cin : in  STD_LOGIC;
+           s : out  STD_LOGIC;
+           cot : out  STD_LOGIC);
+end fa;
+
+architecture Behavioral of fa is
+    component HA
+        Port ( a : in  STD_LOGIC;
+               b : in  STD_LOGIC;
+               sum : out  STD_LOGIC;
+               carry : out  STD_LOGIC);
+    end component;
+
+    signal s1, c1, c2 : std_logic;
+
+begin
+    HA1: HA port map (a => a, b => b, sum => s1, carry => c1);
+    HA2: HA port map (a => s1, b => cin, sum => s, carry => c2);
+    cot <= c1 or c2;
+
+end Behavioral;
+

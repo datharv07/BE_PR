@@ -1,0 +1,128 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity lcd is
+    Port ( clk, reset : in std_logic;
+           RS, EN, RW : out std_logic;
+           data : out std_logic_vector(7 downto 0));
+end lcd;
+
+architecture Behavioral of lcd is
+    type state_type is (s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11,
+                         s12, s13, s14, s15, s16, s17, s18, s19, s20, s21, s22, s23);
+    signal state: state_type;
+    signal count: std_logic_vector(22 downto 0) := (others => '0');  -- Initialize count
+    signal clk1: std_logic;
+begin
+
+    process(clk, reset)
+    begin
+        if reset = '1' then
+            count <= (others => '0');  -- Reset count on reset signal
+        elsif (clk'event and clk = '1') then
+            count <= count + "00000000000000000000001";  -- Increment count
+        end if;
+        clk1 <= count(20);  -- Generate clk1 from count
+    end process;
+
+    RW <= '0';  -- Set RW to 0 outside of process
+
+    process(clk1, reset)
+    begin
+        if reset = '1' then
+            state <= s0;  -- Reset state
+        elsif rising_edge(clk1) then
+            case state is
+                when s0 =>
+                    state <= s1;
+                    RS <= '0';  -- Write commands to LCD.
+                    EN <= '1';
+                    data <= "00110000"; -- Function set for 8 bit interface, 1 line mode and 5x7 dot matrix.
+                when s1 =>
+                    state <= s2;
+                    EN <= '0';
+                when s2 =>
+                    state <= s3;
+                    EN <= '1';
+                    data <= "00001111"; -- Display cursor and blinking ON.
+                when s3 =>
+                    state <= s4;
+                    EN <= '0';
+                when s4 =>
+                    state <= s5;
+                    EN <= '1';
+                    data <= "00000001"; -- Clear display.
+                when s5 =>
+                    state <= s6;
+                    EN <= '0';
+                when s6 =>
+                    state <= s7;
+                    EN <= '1';
+                    data <= "10000100"; -- Display address.
+                when s7 =>
+                    state <= s8;
+                    EN <= '0';
+                when s8 =>
+                    RS <= '1';  -- Write data to LCD.
+                    state <= s9;
+                    EN <= '1';
+                    data <= "00101010"; -- (*)
+                when s9 =>
+                    state <= s10;
+                    EN <= '0';
+                when s10 =>
+                    state <= s11;
+                    EN <= '1';
+                    data <= "01010011"; -- S
+                when s11 =>
+                    state <= s12;
+                    EN <= '0';
+                when s12 =>
+                    state <= s13;
+                    EN <= '1';
+                    data <= "01001011"; -- K
+                when s13 =>
+                    state <= s14;
+                    EN <= '0';
+                when s14 =>
+                    state <= s15;
+                    EN <= '1';
+                    data <= "01001110"; -- N
+                when s15 =>
+                    state <= s16;
+                    EN <= '0';
+                when s16 =>
+                    state <= s17;
+                    EN <= '1';
+                    data <= "01000011"; -- C
+                when s17 =>
+                    state <= s18;
+                    EN <= '0';
+                when s18 =>
+                    state <= s19;
+                    EN <= '1';
+                    data <= "01001111"; -- O
+                when s19 =>
+                    state <= s20;
+                    EN <= '0';
+                when s20 =>
+                    state <= s21;
+                    EN <= '1';
+                    data <= "01000101"; -- E
+                when s21 =>
+                    state <= s22;
+                    EN <= '0';
+                when s22 =>
+                    state <= s23;
+                    EN <= '1';
+                    data <= "00101010"; -- (*)
+                when s23 =>
+                    EN <= '0';
+                when others =>
+                    state <= s0;  -- Default case to reset state
+            end case;
+        end if;
+    end process; 
+end Behavioral;

@@ -1,0 +1,136 @@
+ARDUINO CODE
+
+HUMIDITY AND TEMPERATURE SENSOR INTERFACING
+
+#include<DTH.h >
+
+#define DHTPIN 2 // Define the pin where your DHT11 is connected
+#define DHTTYPE DHT11 // Define the type of DHT sensor (DHT11 or DHT22) 
+DHT dht(DHTPIN, DHTTYPE);
+void setup() {
+Serial.begin(9600);
+dht.begin();
+}
+void loop() {
+delay(2000); // Delay for 2 seconds between measurements
+ // Read temperature and humidity from the sensor
+float temperature = dht.readTemperature(); 
+float humidity = dht readHumidity();
+
+//Check if any reads failed and exit early (to try again).
+
+if (isnan(temperature) || isnan(humidity)) (
+Serial.println(&quot;Failed to read from DHT sensor&quot;); 
+return;
+}
+// Print the temperature and humidity values to the serial monitor
+Serial.print(&quot; Temperature: &quot;);
+Serial.print(temperature);
+Serial.println(&quot; °C&quot;);
+Serial.print(&quot;Humidity: &quot;);
+Serial.print(humidity);
+Serial.println(&quot; %&quot;);
+// You can also convert to Fahrenheit if needed
+// float fahrenheit (temperature 1.8) +32; //Serial.print(&quot; Temperature: &quot;);
+// Serial.print(fahrenheit);
+// Serial.println(&quot; °F&quot;);
+
+
+
+
+RASPBERRY PI CODE
+
+
+
+import sys
+import Adafruit_DHT as dht from time import sleep
+import urllib
+import RPI.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(24, GPIO. IN)
+#Smoke Sensor Digital output
+GPIO serwarnings(False)
+def DHT11_data():
+#Reading from DHT11 and storing the temperature and humidity humi, temp dht.read_retry(11,23)
+retum humi, temp
+#Enter Your API key here 
+myAPI ="ZON4Z08XZ9HLOZYO"
+#URL where we will send the data, Don't change in baseURL="https://api.thingspeak.com/update?api_key="%
+while True:
+humidity, temperature = DHT11_data()
+print (Temp: (0:0.10 C Humidity: (1:0.10 %. format(temperature, humidity))
+input state GPIO.input(24)
+if input state False:
+smoke = 1
+print('Smoke Detected')
+print(smoke)
+else:
+smoke0
+print('Smoke is not Detected')
+print(smoke)
+from urllib.request import urlopen
+content urlopen(baseURL (temperature,humidity,smoke)) "&field1=%s&field2=%s&field3=%s" %
+sleep(15)
+
+
+
+
+RASPBERRY CODE
+
+
+
+DISPLAY HUMIDITY AND TEMP ON LCD
+
+
+
+#sudo pip3 install adafruit-circuitpython-dht
+#sudo apt-get install libgpiod2
+import time
+import board
+import digitalio
+impo adafruit_character_lcd.character_led as charactericd
+import RPI GPIO as GPIO
+# Initial the dht device, with data pin connected to: 
+dhtDevice = adafruit dhr.DHT11 (board.D19)
+#Modity this if you have a different sized character LCD 
+led columns-16
+Ied_rows=2
+#Raspberry Pi Pin Config:
+lcd_rsdigitalio.DigitalInOut(board.D5)
+Icd_en digitalio.Digital InOut(board.D6)
+lcd_d4-digitalio.DigitalInOut(board.D12)
+lcd_d5=digitalio. DigitalInOut(board.D13)
+lcd_d6digitalio.Digital InOut(board.D16)
+lcd_d7digitalio DigitalInOut(board.D17)
+
+#Initialise the lcd class
+lcd = characterlcd.Character_LCD_Mono( lcd_rs, lcd_en, lcd_d4, led_d5, lcd_d6, lcd_d7, lcd_columns, lcd_rows)
+if_name=’__main__’:
+ while True:
+   try:
+         #Print the values to the serial port
+         temperature = dhtDevice.temperature
+         temperature_f=temperature_c (9/5)+ 32 
+         humidity=  dhtDevice. humidity
+        print("Temp: (10 F/1:10 C Humidity: ()%" format(temperature_f, temperature_c, humidity))
+        Icd.clear()
+
+       #lcd_line_1="Temperature" + stritemperature_c)+"C
+       #lcd_line_2nHumidity:"+ str (humidity)+""
+       #lcd.message Icd_line_1+Icd_line_2;
+         lcd.message ("Temper: %.IFC %temperature_c)
+         lcd.message("in Humidity:%. IF%humidity)
+         time.sleep(2.0)
+
+    except RuntimeError as error:
+        #Errors happen fairly often, DHT's are hard to read, just keep going
+        print(error.args[0]
+        time.sleep(2.0)
+        continue
+
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+        print (Exiting Program')
+        exit()
+
+

@@ -1,0 +1,68 @@
+ARUDINO CODE
+
+LED with SWITCH
+
+const int buttonPin = 8;  // Digital Pin 8 define as a push Button pin
+const int ledPin = 10; // Digital Pin 13 define as LED Pin
+int buttonState = 0; // variable for reading the pushbutton status
+void setup() {
+pinMode(ledPin, OUTPUT);
+pinMode(buttonPin, INPUT);
+Serial.begin(9600);
+}
+void loop() {
+buttonState = digitalRead(buttonPin);
+if (buttonState HIGH)
+{
+digitalWrite(ledPin, HIGH);
+Serial.println("Button Pressed");
+}
+else
+{
+digitalWrite(ledPin, LOW); Serial.println("Button Not Pressed");
+}
+
+
+RASPBERRY CODE
+
+import RPi.GPIO as GPIO import time
+LED=5
+GPIO.setmode (GPIO.BCM)
+GPIO.setup(LED, GPIO.OUT)
+GPIO.output(LED, GPIO.HIGH)
+def blink():
+GPIO.output(LED, GPIO.HIGH)
+ time.sleep(1)
+GPIO.output(LED, GPIO.LOW) 
+time.sleep(1)
+def destroy():
+GPIO.output(LED, GPIO.LOW)
+GPIO.cleanup()
+if__name__==’__main__’:
+try:
+while True:
+blink()
+except KeyboardInterrupt:
+destroy()
+
+
+
+
+
+ARDUINO CODE
+
+LED BLINKING
+
+int LEDpin = 13;
+int delayT = 1000;
+void setup() { 
+// put your setup code here, to run once:
+pinMode(LEDpin, OUTPUT);
+}
+void loop() {
+// put your main code here, to run repeatedly.
+digitalWrite(LEDpin, HIGH);
+delay(delayT);
+digitalWrite(LEDpin, LOW); 
+delay(delayT);
+ }

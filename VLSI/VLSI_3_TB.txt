@@ -1,0 +1,65 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--USE ieee.numeric_std.ALL;
+
+ENTITY hhh IS
+END hhh;
+
+ARCHITECTURE behavior OF hhh IS 
+
+    -- Component Declaration for the Unit Under Test (UUT)
+    COMPONENT modncount
+    PORT(
+         clk : IN  std_logic;
+         clr : IN  std_logic;
+         q : INOUT  std_logic_vector(2 downto 0)
+        );
+    END COMPONENT;
+
+   -- Inputs
+   signal clk : std_logic := '0';
+   signal clr : std_logic := '0';
+
+   -- BiDirs
+   signal q : std_logic_vector(2 downto 0) := (others => '0');  -- Initialize q to zero
+
+   -- Clock period definitions
+   constant clk_period : time := 10 ns;
+
+BEGIN
+
+   -- Instantiate the Unit Under Test (UUT)
+   uut: modncount PORT MAP (
+          clk => clk,
+          clr => clr,
+          q => q
+        );
+
+   -- Clock process definitions
+   clk_process : process
+   begin
+        clk <= '0';
+        wait for clk_period / 2;
+        clk <= '1';
+        wait for clk_period / 2;
+   end process;
+
+   -- Stimulus process
+   stim_proc: process
+   begin        
+        clr <= '1';
+        -- Hold reset state for 20 ns
+        wait for 20 ns;    
+        clr <= '0';
+        -- Allow the counter to count
+        wait for 100 ns; 
+
+        -- insert additional stimulus here as needed 
+
+        wait;
+   end process;
+
+END behavior;

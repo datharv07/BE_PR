@@ -1,0 +1,97 @@
+ARDUINO CODE
+
+
+
+FOR MOTOR CONTROL
+
+
+
+int motorPin = 9;
+void setup() {
+pinMode(motorPin, OUTPUT);
+Serial.begin(9600);
+while (! Serial);
+Serial.println("Speed 0 to 255");
+}
+void loop() (
+if (Serial.available()) { 
+int speed = Serial.parseInt(); 
+if (speed >= 0 && speed <= 255) {
+ analog Write(motorPin, speed);
+}
+}
+}
+
+
+RASPBERRY CODE
+
+
+import RPi. GPIO as GPIO                      #Importing RPi library to use the GPIO pins
+import time
+EN1=25                                              #Initializing the GPIO pin 25 for the enable 1
+INI = 26                                                # Initializing the GPIO pin 26 for input 1 of the motor driver 
+IN2-27                                                 # Initializing the GPIO pin 27 for input 2 of the motor driver
+GPIO. setmode (GPIO.BCM)                    #We are using the BCM pin numbering
+GPIO. setup (ENI,GPIO.OUT)                  ## Declaring as ENI output pin
+GPIO. setup (INI, GPIO.OUT)                  ## Declaring as INI output pin
+GPIO. setup (IN2, GPIO.OUT)                  ## Declaring as IN2 output pin
+#clear GPIOS
+def destroy():
+    GPIO.output(25, False)
+    GPIO.output(26, False)
+    GPIO.output(27, False)
+    GPIO.cleanup()
+
+def Clockwise():
+  GPIO.output(25, True)
+  GPIO.output(26, True)
+  GPIO.output(27, False)
+
+def AntiClockwise():
+   GPIO.output(25, True)
+   GPIO.output(26, False)
+   GPIO.output(27, True)
+
+
+def Stop):
+GPIO.output(25, False)
+GPIO.output(26, False)
+GPIO.output(27, False)
+
+If __name_ ==’__main__':        #Program start from here
+try:
+   while True:                             #Loop will run forever
+        Clockwise()
+        time.sleep(2)
+        Stop()
+        time.sleep(1)
+        AntiClockwise()
+        time.sleep(2)
+        Stop()
+        time.sleep(1)
+# If keyboard Interrupt (CTRL-C) is pressed except KeyboardInterrupt:
+destroy()
+
+
+
+ARDUINO CODE
+
+
+MOTOR CONTROL
+
+
+
+int DCMOTOR = 13;
+int delayT = 1000;
+void setup() {
+// put your setup code here, to run once:
+pinMode (DCMOTOR, OUTPUT); 
+}
+void loop() {
+// put your main code here, to run repeatedly:
+digitalWrite(DCMOTOR, HIGH);
+delay(delayT);
+digitalWrite(LEDpin, LOW);
+delay(delayT);
+
+}

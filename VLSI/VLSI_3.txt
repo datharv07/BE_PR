@@ -1,0 +1,29 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;  -- Use this for arithmetic operations on std_logic_vector
+
+entity modncount is
+    Port ( clk : in  STD_LOGIC;
+           clr : in  STD_LOGIC;
+           q : inout  STD_LOGIC_VECTOR (2 downto 0));
+end modncount;
+
+architecture Behavioral of modncount is
+signal count: unsigned(2 downto 0);  -- Use unsigned for counting
+begin 
+process(clk)
+begin
+    if (clr = '1') then
+        count <= (others => '0');  -- Reset count to 0
+
+    elsif (rising_edge(clk)) then
+        if (count = "100") then
+            count <= (others => '0');  -- Reset count to 0
+        else
+            count <= count + 1;  -- Increment the counter
+        end if;
+    end if;
+end process;
+
+q <= std_logic_vector(count);  -- Convert unsigned back to std_logic_vector
+end Behavioral;

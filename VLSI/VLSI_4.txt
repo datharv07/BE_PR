@@ -1,0 +1,78 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+entity fifo_6bit is
+    port (
+        clk, rst, enwr, enrd : in STD_LOGIC;
+        datain : in STD_LOGIC_VECTOR (3 downto 0);
+        dataout : out STD_LOGIC_VECTOR (3 downto 0);
+        full, empty : out STD_LOGIC
+    );
+end fifo_6bit;
+
+architecture Behavioral of fifo_6bit is
+    type memory_type is array (0 to 7) of STD_LOGIC_VECTOR(3 downto 0);
+    signal memory : memory_type;
+    signal writeptr, readptr : integer := 0;
+begin
+    process (clk)
+    begin
+        if clk = '1' and clk'event and enwr = '1' and enrd = '0' then
+            memory(convert_integer(writeptr)) <= datain;
+            writeptr <= writeptr + 1;
+        end if;
+
+        if clk = '1' and clk'event and enwr = '0' and enrd = '1' then
+            dataout <= memory(convert_integer(readptr));
+            readptr <= readptr + 1;
+        end if;
+    end process;
+
+    process
+    begin
+        if (writeptr = "1000") then
+            full <= '1';
+        else
+            full <= '0';
+        end if;
+
+        if (readptr = "1000") then
+            empty <= '1';
+        else
+            empty <= '0';
+        end if;
+    end process;
+end Behavioral;
+
+-- Test Bench
+architecture stim_proc of fifo_6bit is
+begin
+    stim_proc: process
+    begin
+        enwr <= '1';
+        enrd <= '0';
+        datain <= "0001";
+        wait for 10 ns;
+        datain <= "0010";
+        wait for 10 ns;
+
+        -- Additional testing logic here
+        -- for a timing process...
+
+        process (clk, rst)
+        begin
+            if rst = '1' then
+                cnt <= (others => '0');
+            elsif clk'event and clk = '1' then
+                cnt <= cnt + 1;
+                if cnt = "some condition" then
+                    clk <= '1';
+                    cnt <= (others => '0');
+                else
+                    clk <= '0';
+                end if;
+            end if;
+        end process;
+end architecture stim_proc;
